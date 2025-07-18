@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct TextFieldView: View {
-    @State var txtName: String = ""
-    @State var txtAge: String = ""
-    @State var flagOnEditing: Bool = false
+    @State private var txtName: String = ""
+    @State private var txtAge: String = ""
+    @State private var flagOnEditing: Bool = false
     
     var body: some View {
         ZStack {
@@ -69,6 +69,9 @@ struct ExtractedTextFieldView<T>: View {
         Text(txtTextFieldTitle)
             .foregroundColor(.red)
             .frame(width: screen.width - 10, alignment: .trailing)
+            .onTapGesture {
+                print(txtTextFieldValue)
+            }
         
         TextField(
             txtTextFieldPlaceholder,
@@ -86,13 +89,23 @@ struct ExtractedTextFieldView<T>: View {
         .frame(width: screen.width - 10)
         .cornerRadius(10)
         .keyboardType(dataType == String.self ? .default : .numberPad)
-        .focused($isNumberFieldFocused)
+        .focused($isNumberFieldFocused, equals: dataType == Int.self)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
-                Button {
-                    isNumberFieldFocused = false
-                } label: {
-                    Text("Done")
+                if isNumberFieldFocused {
+                    Button {
+                        isNumberFieldFocused = false
+                    } label: {
+                        Image(systemName: "button.horizontal.top.press")
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        isNumberFieldFocused = false
+                    } label: {
+                        Text("Done")
+                    }
                 }
             }
         }
